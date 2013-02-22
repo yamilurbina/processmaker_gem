@@ -2,7 +2,7 @@
 A Ruby library to connect to a ProcessMaker instance via web services.
 
 ## Installation
-ProcessMaker will be available very shortly on RubyGems:
+ProcessMaker is available on [RubyGems](https://rubygems.org/gems/processmaker):
 
 ```
 gem install processmaker
