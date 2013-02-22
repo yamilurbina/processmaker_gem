@@ -14,17 +14,14 @@ gem install processmaker
 require 'processmaker'
 
 # ProcessMaker instance
-wsdl = 'http://demo.processmaker.com:80/sysdemo/en/classic/services/wsdl2'
-username = 'admin'
-password = 'sample'
+url = 'http://demo.processmaker.com:80/sysdemo/en/classic/services/wsdl2'
 
-# Login
-login = Processmaker.login(wsdl: wsdl, user_id: username, password: password)
-# Get session_id
-session_id = login[:message]
+# Login first
+Processmaker.login(wsdl: url, user_id: 'admin', password: 'sample')
 
+# Now you can start getting data
 # example: get all the users
-users = Processmaker.user_list(session_id: session_id)
+users = Processmaker.user_list
 users.each do |u|
 	u[:name]
 end
