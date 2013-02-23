@@ -11,9 +11,7 @@ class Processmaker
 	def self.login(options = {})
 		@client = Savon.client(wsdl: options[:wsdl])
 		response = @client.call( :login, message: { userid: options[:user_id], password: options[:password] })	
-		# set session_id
 		@session_id_token = response.body[:login_response][:message]
-		# return response
 		return response.body[:login_response]
 	end
 
@@ -192,13 +190,25 @@ class Processmaker
 	# returns information about a given case
 	# http://wiki.processmaker.com/index.php/2.0/ProcessMaker_WSDL_Web_Services#getCaseInfo.28.29
 	def self.get_case_info(options = {})
-		response = @client.call( :unassigned_case_list, message: {
+		response = @client.call( :get_case_info, message: {
 			sessionId: options[:session_id] || @session_id_token,
 			caseId: options[:case_id],
 			delIndex: options[:del_index] || "1"
 		})
-		ap response.body
-		#return response.body[:unassigned_case_list_response][:cases]
+		return response.body[:get_case_info_response]
 	end
 
+	# newCase()
+	# begins a new case under the name of the logged-in user
+	# http://wiki.processmaker.com/index.php/2.0/ProcessMaker_WSDL_Web_Services#newCase.28.29
+	def self.new_case(options = {})
+		response = @client.call( :new_case, message: {
+			sessionId: options[:session_id] || @session_id_token,
+			processId: options[:process_id],
+			taskId: options[:task_id],
+			variables: options[:variables]
+		})
+		ap response.body
+	end
+	
 end
