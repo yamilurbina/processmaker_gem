@@ -206,9 +206,175 @@ class Processmaker
 			sessionId: options[:session_id] || @session_id_token,
 			processId: options[:process_id],
 			taskId: options[:task_id],
+			# TODO: Send variables when starting a case
 			variables: options[:variables]
 		})
+		return response.body[:new_case_response]
+	end
+
+	# newCaseImpersonate()
+	# creates a new case impersonating a user who has the proper privileges to create new cases
+	# http://wiki.processmaker.com/index.php/2.0/ProcessMaker_WSDL_Web_Services#newCaseImpersonate.28.29
+	def self.new_case_impersonate(options = {})
+		response = @client.call( :new_case_impersonate, message: {
+			sessionId: options[:session_id] || @session_id_token,
+			processId: options[:process_id],
+			taskId: options[:task_id],
+			# TODO: Send variables when starting a case
+			variables: options[:variables]
+		})
+		return response.body[:pm_response]
+	end
+
+	# reassignCase()
+	# reassigns a case to a different user
+	# http://wiki.processmaker.com/index.php/2.0/ProcessMaker_WSDL_Web_Services#newCaseImpersonate.28.29
+	def self.reassign_case(options = {})
+		response = @client.call( :reassign_case, message: {
+			sessionId: options[:session_id] || @session_id_token,
+			caseId: options[:case_id],
+			delIndex: options[:del_index],
+			userIdSource: options[:user_id_source],
+			userIdTarget: options[:user_id_target]
+		})
+		return response.body[:pm_response]
+	end
+
+	# routeCase()
+	# routes a case
+	# http://wiki.processmaker.com/index.php/2.0/ProcessMaker_WSDL_Web_Services#routeCase.28.29
+	def self.route_case(options = {})
+		response = @client.call( :route_case, message: {
+			sessionId: options[:session_id] || @session_id_token,
+			caseId: options[:case_id],
+			delIndex: options[:del_index]
+		})
+		return response.body[:route_case_response]
+	end
+
+
+=begin
+	This method is not working due to a bug in Processmaker
+	# getVariables()
+	# returns variables from a given case
+	# http://wiki.processmaker.com/index.php/2.0/ProcessMaker_WSDL_Web_Services#getVariables.28.29
+	def self.get_variables(options = {})
+		response = @client.call( :get_variables, message: {
+			sessionId: options[:session_id] || @session_id_token,
+			caseId: options[:case_id],
+			variables: 'variables'
+		})
 		ap response.body
+		#return response.body[:route_case_response]
+	end
+
+	# sendVariables()
+	# sends variables to a case
+	# http://wiki.processmaker.com/index.php/2.0/ProcessMaker_WSDL_Web_Services#sendVariables.28.29
+	def self.send_variables(options = {})
+		response = @client.call( :send_variables, message: {
+			sessionId: options[:session_id] || @session_id_token,
+			caseId: options[:case_id],
+			variables: 'variables'
+		})
+		ap response.body
+		#return response.body[:route_case_response]
+	end
+=end
+
+	# triggerList()
+	# triggerList() returns a list of all the available triggers in a workspace
+	# http://wiki.processmaker.com/index.php/2.0/ProcessMaker_WSDL_Web_Services#triggerList.28.29
+	def self.trigger_list(options = {})
+		response = @client.call(:trigger_list, message: {
+			sessionId: options[:session_id] || @session_id_token
+		})
+		return response.body[:trigger_list_response][:triggers]
+	end
+
+	# executeTrigger()
+	# executes a ProcessMaker trigger
+	# http://wiki.processmaker.com/index.php/2.0/ProcessMaker_WSDL_Web_Services#executeTrigger.28.29
+	def self.execute_trigger(options = {})
+		response = @client.call(:execute_trigger, message: {
+			sessionId: options[:session_id] || @session_id_token,
+			caseId: options[:case_id],
+			triggerIndex: options[:trigger_index],
+			delIndex: options[:del_index]
+		})
+		return response.body[:pm_response]
+	end
+
+	# sendMessage()
+	# sends an email with the provided data
+	# http://wiki.processmaker.com/index.php/2.0/ProcessMaker_WSDL_Web_Services#sendMessage.28.29
+	def self.send_message(options = {})
+		response = @client.call(:send_message, message: {
+			sessionId: options[:session_id] || @session_id_token,
+			caseId: options[:case_id],
+			from: options[:from],
+			to: options[:to],
+			cc: options[:cc] || "", 
+			bcc: options[:bcc] || "",
+			subject: options[:subject],
+			template: options[:template]
+		})
+		return response.body[:pm_response]
+	end
+
+	# systemInformation()
+	# returns information about the WAMP/LAMP stack, the workspace database, the IP number
+	# and version of ProcessMaker, and the IP number and version of web browser of the user
+	# http://wiki.processmaker.com/index.php/2.0/ProcessMaker_WSDL_Web_Services#systemInformation.28.29
+	def self.system_information(options = {})
+		response = @client.call(:system_information, message: {
+			sessionId: options[:session_id] || @session_id_token
+		})
+		return response.body[:system_information_response]
+	end
+
+	# inputDocumentList()
+	# returns a list of the uploaded documents for a given case
+	# http://wiki.processmaker.com/index.php/2.0/ProcessMaker_WSDL_Web_Services#systemInformation.28.29
+	def self.input_document_list(options = {})
+		response = @client.call(:input_document_list, message: {
+			sessionId: options[:session_id] || @session_id_token,
+			caseId: options[:case_id]
+		})
+		return response.body[:input_document_list_response][:documents]
+	end
+
+	# inputDocumentProcessList()
+	# returns a list of the Input Document definitions for a given process
+	# http://wiki.processmaker.com/index.php/2.0/ProcessMaker_WSDL_Web_Services#inputDocumentProcessList.28.29
+	def self.input_document_process_list(options = {})
+		response = @client.call(:input_document_process_list, message: {
+			sessionId: options[:session_id] || @session_id_token,
+			processId: options[:process_id]
+		})
+		return response.body[:input_document_process_list_response][:documents]
+	end
+
+	# outputDocumentList()
+	# returns a list of the output documents for a given case
+	# http://wiki.processmaker.com/index.php/2.0/ProcessMaker_WSDL_Web_Services#outputDocumentList.28.29
+	def self.output_document_list(options = {})
+		response = @client.call(:output_document_list, message: {
+			sessionId: options[:session_id] || @session_id_token,
+			caseId: options[:case_id]
+		})
+		return response.body[:output_document_list_response][:documents]
+	end
+
+	# removeDocument()
+	# removes an uploaded or generated document from a case
+	# http://wiki.processmaker.com/index.php/2.0/ProcessMaker_WSDL_Web_Services#removeDocument.28.29
+	def self.remove_document(options = {})
+		response = @client.call(:remove_document, message: {
+			sessionId: options[:session_id] || @session_id_token,
+			appDocUid: options[:app_doc_uid]
+		})
+		return response.body[:pm_response]
 	end
 	
 end
