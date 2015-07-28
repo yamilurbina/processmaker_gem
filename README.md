@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/yamilurbina/processmaker_gem.png?label=ready&title=Ready)](https://waffle.io/yamilurbina/processmaker_gem)
 # Processmaker
 A Ruby library to connect to a ProcessMaker instance via web services.
 
